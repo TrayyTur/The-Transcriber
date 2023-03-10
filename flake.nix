@@ -9,6 +9,7 @@
     flake-utils.lib.eachDefaultSystem (system: let
       pkgs = import nixpkgs {
         inherit system;
+        config.allowUnfree = true;
         overlays = [ devshell.overlay (self: super: rec {
           python3 = super.python3.override {
             packageOverrides = final: prev: {
@@ -20,6 +21,9 @@
           };
           pianotrans = super.callPackage ./nix/pianotrans { };
           python3Packages = python3.pkgs;
+          blas = super.blas.override {
+            blasProvider = self.mkl;
+          };
         })];
       };
     in rec {
