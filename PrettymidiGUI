@@ -1,0 +1,64 @@
+import pretty_midi
+from tkinter import Tk, Button, Entry, Label, filedialog
+import time
+import os
+
+# Path to the folder where PianoTrans exports the MIDI files
+export_folder = "/path/to/export/folder"
+
+def process_midi(file_path):
+    # Load the exported MIDI file using PrettyMIDI
+    midi = pretty_midi.PrettyMIDI(file_path)
+    
+    # Get user input for the maximum duration
+    max_duration = float(duration_entry.get())
+    
+    # Process MIDI using PrettyMIDI (Example: Adjusting note durations)
+    for instrument in midi.instruments:
+        for note in instrument.notes:
+            if note.end - note.start > max_duration:
+                note.end = note.start + max_duration
+    
+    # Save the adjusted MIDI file
+    output_path = filedialog.asksaveasfilename(title="Save adjusted MIDI file", defaultextension=".mid", filetypes=[("MIDI Files", "*.mid")])
+    if not output_path:
+        print("No output file specified.")
+        return
+    midi.write(output_path)
+    print("Adjusted MIDI file saved:", output_path)
+
+def check_export_folder():
+    while True:
+        # Get the list of files in the export folder
+        files = os.listdir(export_folder)
+        
+        # Filter MIDI files
+        midi_files = [f for f in files if f.endswith(".mid")]
+        
+        # If a new MIDI file is detected
+        if midi_files:
+            # Launch the GUI menu for MIDI processing
+            launch_gui(midi_files[0])
+        
+        # Pause for a few seconds before checking again
+        time.sleep(5)
+
+def launch_gui(midi_file):
+    # Create GUI window
+    window = Tk()
+    window.title("MIDI Processing")
+    window.geometry("300x150")
+
+    # Label and entry for maximum duration
+    Label(window, text="Max Duration (seconds):").pack()
+    duration_entry = Entry(window)
+    duration_entry.pack()
+
+    # Button to process the MIDI file
+    Button(window, text="Process MIDI", command=lambda: process_midi(os.path.join(export_folder, midi_file))).pack()
+
+    # Run the GUI main loop
+    window.mainloop()
+
+# Start checking the export folder for new MIDI files
+check_export_folder()
