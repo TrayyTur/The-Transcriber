@@ -1,3 +1,26 @@
+import subprocess
+
+# Check if Python is installed
+try:
+    subprocess.run(["python", "--version"], check=True)
+    print("Python is already installed.")
+except FileNotFoundError:
+    print("Python is not installed. Please install Python from https://www.python.org.")
+
+# Check if PrettyMIDI is installed
+try:
+    import pretty_midi
+    print("PrettyMIDI is already installed.")
+except ImportError:
+    print("PrettyMIDI is not installed. Installing PrettyMIDI...")
+    subprocess.run(["pip", "install", "pretty_midi"])
+
+# Continue with your code
+import pretty_midi
+from pianotrans import PianoTrans
+
+# Rest of your code...
+
 import setuptools
 
 setuptools.setup(
