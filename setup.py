@@ -15,10 +15,17 @@ except ImportError:
     print("PrettyMIDI is not installed. Installing PrettyMIDI...")
     subprocess.run(["pip", "install", "pretty_midi"])
 
+# Check if Tkinter is installed
+try:
+    import tkinter
+    print("Tkinter is already installed.")
+except ImportError:
+    print("Tkinter is not installed. Installing Tkinter...")
+    subprocess.run(["pip", "install", "tk"])
+
 # Continue with your code
 import pretty_midi
-from pianotrans import PianoTrans
-
+from tkinter import Tk, Button, Entry, Label, filedialog
 # Rest of your code...
 
 import setuptools
